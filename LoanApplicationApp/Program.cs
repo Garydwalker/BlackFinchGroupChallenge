@@ -11,7 +11,7 @@ using MediatR;
 
 
 var builder = Host.CreateApplicationBuilder(args);
-//todo: CREATE EXTENSION METHOD
+
 builder.Services.AddTransient<LoanRequestService>();
 builder.Services.AddSingleton<LoanApplicationStore>();
 builder.Services.AddSingleton<LoanStatsStore>();
