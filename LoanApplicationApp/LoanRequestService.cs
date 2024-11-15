@@ -27,7 +27,6 @@ public class LoanRequestService(IMediator mediator, LoanStatsStore loanStats)
                 case "3":
                 {
                     return;
-
                 }
                 default:
                     Console.WriteLine("Please select a valid option");
