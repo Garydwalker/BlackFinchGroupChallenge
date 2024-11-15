@@ -23,5 +23,15 @@ Build a simple Console application using the technology of your choice (preferab
     * If the LTV is less than 90%, the credit score of the applicant must be 900 or more
     * If the LTV is 90% or more, the application must be declined
 
-## Submission
-Send through a public link to your GIT repository prior to interview.
+## Assumptions
+1. Rounding for LTV should be to 2 decimal places.
+
+## Considerations
+* I felt a real evaluation of the Applcation could take time and likely comumicate with 3rd party services. so i didnt want the evaluation to be part of the creation of the application. 
+* I felt the "stats" requirement had nothing to do with the loan application nor the evaluation of the application. so the code should be seperated.
+
+## Improvements
+* Create a persistance DataStore - something like Azure Comsos would all the messages to become asynchronous and the outbox pattern could be used to ensure the an atomic action of creating the Application and raising the events. or maybe use the transactional outbox pattern with Dapr.
+* It feels that i have created several services within this project that would be better suited to seperate projects. these could be seperated out to their own domain.  Reporting and Application.  the evaluation process could feasibly be seperated as well.
+
+
