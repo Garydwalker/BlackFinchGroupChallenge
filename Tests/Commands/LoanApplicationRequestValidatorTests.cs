@@ -6,7 +6,7 @@ namespace LoanApplicationApp.Tests.Commands;
 [TestFixture]
 public class LoanApplicationRequestValidatorTests
 {
-    private LoanApplicationRequestValidator _validator;
+    private LoanApplicationRequestValidator _validator = null!;
 
     [SetUp]
     public void Setup()

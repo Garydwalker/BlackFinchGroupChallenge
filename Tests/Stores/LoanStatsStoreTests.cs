@@ -7,7 +7,7 @@ namespace LoanApplicationApp.Tests.Stores;
 [TestFixture]
 public class LoanStatsStoreTests
 {
-    private LoanStatsStore _store;
+    private LoanStatsStore _store = null!;
 
     [SetUp]
     public void Setup()

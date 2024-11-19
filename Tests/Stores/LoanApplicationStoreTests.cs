@@ -9,8 +9,8 @@ namespace LoanApplicationApp.Tests.Stores;
 [TestFixture]
 public class LoanApplicationStoreTests
 {
-    private IMediator _mediator;
-    private LoanApplicationStore _store;
+    private IMediator _mediator = null!;
+    private LoanApplicationStore _store =null!;
 
     [SetUp]
     public void Setup()

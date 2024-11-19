@@ -10,8 +10,8 @@ namespace LoanApplicationApp.Tests.Commands;
 [TestFixture]
 public class LoanApplicationRequestHandlerTests
 {
-    private LoanApplicationStore _loanApplicationStore;
-    private LoanApplicationRequestHandler _handler;
+    private LoanApplicationStore _loanApplicationStore = null!;
+    private LoanApplicationRequestHandler _handler = null!;
 
     [SetUp]
     public void Setup()
@@ -46,7 +46,8 @@ public class LoanApplicationRequestHandlerTests
         // Act + Assert
         var exception =
             Assert.ThrowsAsync<ArgumentNullException>(() => _handler.Handle(request, CancellationToken.None));
-        exception.Message.Should().Contain("LoanAmount");
+        exception.Should().NotBeNull();
+        exception!.Message.Should().Contain("LoanAmount");
     }
 
     [Test]
@@ -58,7 +59,8 @@ public class LoanApplicationRequestHandlerTests
         // Act + Assert
         var exception =
             Assert.ThrowsAsync<ArgumentNullException>(() => _handler.Handle(request, CancellationToken.None));
-        exception.Message.Should().Contain("AssetValue");
+        exception.Should().NotBeNull();
+        exception!.Message.Should().Contain("AssetValue");
     }
 
     [Test]
@@ -71,7 +73,8 @@ public class LoanApplicationRequestHandlerTests
         // Act + Assert
         var exception =
             Assert.ThrowsAsync<ArgumentNullException>(() => _handler.Handle(request, CancellationToken.None));
-        exception.Message.Should().Contain("CreditScore");
+        exception.Should().NotBeNull();
+        exception!.Message.Should().Contain("CreditScore");
     }
 
     [Test]
@@ -83,7 +86,8 @@ public class LoanApplicationRequestHandlerTests
         // Act + Assert
         var exception =
             Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => _handler.Handle(request, CancellationToken.None));
-        exception.Message.Should().Contain("CreditScore");
+        exception.Should().NotBeNull();
+        exception!.Message.Should().Contain("CreditScore");
 
     }
 }

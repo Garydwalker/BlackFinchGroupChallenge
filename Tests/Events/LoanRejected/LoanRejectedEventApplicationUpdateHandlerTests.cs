@@ -10,9 +10,9 @@ namespace LoanApplicationApp.Tests.Events.LoanRejected;
 [TestFixture]
 public class LoanRejectedEventApplicationUpdateHandlerTests
 {
-    private IMediator _mediator;
-    private LoanApplicationStore _loanApplicationStore;
-    private LoanRejectedEventApplicationUpdateHandler _handler;
+    private IMediator _mediator = null!;
+    private LoanApplicationStore _loanApplicationStore = null!;
+    private LoanRejectedEventApplicationUpdateHandler _handler = null!;
 
     [SetUp]
     public void Setup()
@@ -48,6 +48,7 @@ public class LoanRejectedEventApplicationUpdateHandlerTests
 
         // Act + Assert
         var exception = Assert.ThrowsAsync<ArgumentException>(() => _handler.Handle(notification, CancellationToken.None));
-        exception.Message.Should().Be($"Could not find Application with id : {application.Id}");
+        exception.Should().NotBeNull();
+        exception!.Message.Should().Be($"Could not find Application with id : {application.Id}");
     }
 }

@@ -7,7 +7,7 @@ namespace LoanApplicationApp.Tests.LoanApprovalEngine.Rules;
 [TestFixture]
 public class MillionPoundLoanAcceptanceRuleTests
 {
-    private MillionPoundLoanAcceptanceRule _rule;
+    private MillionPoundLoanAcceptanceRule _rule = null!;
 
     [SetUp]
     public void Setup()

@@ -1,0 +1,69 @@
+﻿@page "/new-application"
+@using System.ComponentModel.DataAnnotations
+@using Dapr.Client
+
+@inject DaprClient DaprClient
+@rendermode InteractiveServer
+
+<PageTitle>New Application</PageTitle>
+
+<h1>New Application</h1>
+
+<EditForm Model="@Application" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label for="amount" class="form-label">Loan Amount (in GBP)</label>
+        <InputNumber id="amount" class="form-control" @bind-Value="Application.LoanAmount" />
+        <ValidationMessage For="@(() => Application.LoanAmount)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="asset-value" class="form-label">Asset Value (in GBP)</label>
+        <InputNumber id="asset-value" class="form-control" @bind-Value="Application.AssetValue" />
+        <ValidationMessage For="@(() => Application.AssetValue)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="credit-score" class="form-label">Credit score of the applicant (between 1 and 999)</label>
+        <InputNumber id="credit-score" class="form-control" @bind-Value="Application.CreditScore" />
+        <ValidationMessage For="@(() => Application.CreditScore)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code {
+    public ApplicationModel Application = new ApplicationModel();
+
+    private async Task HandleValidSubmit()
+    {
+        // Handle the form submission
+        try
+        {
+            await DaprClient.PublishEventAsync("pubsub", "createApplications", Application, default(CancellationToken));
+            
+            Console.WriteLine("Application Submitted");
+        }
+        catch
+        { 
+            Console.WriteLine("Unable to submit form");
+        }
+    }
+
+    public class ApplicationModel
+    {
+        [Required]
+        [Range(1, double.MaxValue, ErrorMessage = "Loan Amount must be greater than 0.")]
+        public decimal LoanAmount { get; set; }
+
+        [Required]
+        [Range(1, double.MaxValue, ErrorMessage = "Asset Value must be greater than 0.")]
+        public decimal AssetValue { get; set; }
+
+        [Required]
+        [Range(1, 999, ErrorMessage = "Credit Score must be between 1 and 999.")]
+        public int CreditScore { get; set; }
+    }
+}

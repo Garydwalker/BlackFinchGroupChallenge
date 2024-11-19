@@ -6,6 +6,7 @@ public sealed class LoanSystemHostedService(LoanRequestService loanRequestServic
 {
     public Task StartAsync(CancellationToken cancellationToken)
     {
+
         return loanRequestService.StartAsync();
     }
     

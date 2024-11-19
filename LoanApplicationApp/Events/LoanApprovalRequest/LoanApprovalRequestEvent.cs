@@ -3,8 +3,15 @@ using MediatR;
 
 namespace LoanApplicationApp.Events.LoanApprovalRequest;
 
-public record LoanApprovalRequestEvent(LoanApplication Application, DateTime RequestTime) : INotification
+public class LoanApprovalRequestEvent : BaseEvent
 {
+    public LoanApplication Application { get; init; }
+
+    private LoanApprovalRequestEvent(LoanApplication application)
+    {
+        Application = application;
+    }
+
     public static LoanApprovalRequestEvent CreateLoanApplication(LoanApplication application) =>
-        new(application, DateTime.UtcNow);
+        new(application);
 }

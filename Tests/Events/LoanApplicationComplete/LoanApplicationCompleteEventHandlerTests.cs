@@ -8,8 +8,8 @@ namespace LoanApplicationApp.Tests.Events.LoanApplicationComplete;
 [TestFixture]
 public class LoanApplicationCompleteEventHandlerTests
 {
-    private LoanStatsStore _loanStatsStore;
-    private LoanApplicationCompleteEventHandler _handler;
+    private LoanStatsStore _loanStatsStore = null!;
+    private LoanApplicationCompleteEventHandler _handler = null!;
 
     [SetUp]
     public void Setup()
