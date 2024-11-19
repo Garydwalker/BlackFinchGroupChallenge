@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace ApplicationApi.Commands;
+namespace ApplicationApi.Commands.NewLoanApplication;
 
 public class LoanApplicationRequestValidator : AbstractValidator<LoanApplicationRequest>
 {

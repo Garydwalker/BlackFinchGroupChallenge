@@ -1,8 +1,7 @@
-using ApplicationDomain.Domain;
-using ApplicationDomain.LoanApprovalEngine.Rules;
 using FluentAssertions;
+using LoanDecisionApi.LoanApprovalEngine.Rules;
 
-namespace ApplicationDomainTests.LoanApprovalEngine.Rules;
+namespace LoanDecisionApiTests.LoanApprovalEngine.Rules;
 
 [TestFixture]
 public class SubMillionPoundLoanAcceptanceRuleTests
@@ -21,7 +20,7 @@ public class SubMillionPoundLoanAcceptanceRuleTests
     public void Evaluate_ShouldReturnTrue_WhenLoanAmountIsOverOneMillion(decimal amount)
     {
         // Arrange
-        var application = LoanApplication.Create(amount, 2000000, 800);
+        var application = new LoanApplication(Guid.NewGuid(), amount, 2000000, 800);
 
         // Act
         var result = _rule.Evaluate(application);
@@ -39,7 +38,7 @@ public class SubMillionPoundLoanAcceptanceRuleTests
     public void Evaluate_ShouldReturnExpectedResult_WhenLTVIsUnder60PercentAndCreditScoreIsAtLeast750(decimal amount, decimal assetValue, int creditScore, bool expected)
     {
         // Arrange
-        var application = LoanApplication.Create(amount, assetValue, creditScore);
+        var application = new LoanApplication(Guid.NewGuid(), amount, assetValue, creditScore);
 
         // Act
         var result = _rule.Evaluate(application);
@@ -57,7 +56,7 @@ public class SubMillionPoundLoanAcceptanceRuleTests
     public void Evaluate_ShouldReturnExpectedResult_WhenLTVIsAbove60PercentAndLessThan80PercentAndCreditScoreIsAtLeast800(decimal amount, decimal assetValue, int creditScore, bool expected)
     {
         // Arrange
-        var application = LoanApplication.Create(amount, assetValue, creditScore);
+        var application = new LoanApplication(Guid.NewGuid(), amount, assetValue, creditScore);
 
         // Act
         var result = _rule.Evaluate(application);
@@ -78,7 +77,7 @@ public class SubMillionPoundLoanAcceptanceRuleTests
     public void Evaluate_ShouldReturnExpectedResult_WhenLTVIs80PercentOrMoreAndUnder90PercentAndCreditScoreIsAtLeast900(decimal amount, decimal assetValue, int creditScore, bool expected)
     {
         // Arrange
-        var application = LoanApplication.Create(amount, assetValue, creditScore);
+        var application = new LoanApplication(Guid.NewGuid(), amount, assetValue, creditScore);
 
         // Act
         var result = _rule.Evaluate(application);
@@ -93,7 +92,7 @@ public class SubMillionPoundLoanAcceptanceRuleTests
     public void Evaluate_ShouldReturnFalse_WhenLTVIs90PercentOrMore(decimal amount, decimal assetValue)
     {
         // Arrange
-        var application = LoanApplication.Create(amount, assetValue, 999);
+        var application = new LoanApplication(Guid.NewGuid(), amount, assetValue, 999);
 
         // Act
         var result = _rule.Evaluate(application);

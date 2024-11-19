@@ -5,13 +5,12 @@ namespace ApplicationDomain.Stores;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
-    public DbSet<LoanApplication> LoanApplications => Set<LoanApplication>();   
+    public DbSet<LoanApplication> LoanApplications => Set<LoanApplication>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        // Apply the LoanApplication configuration
         modelBuilder.ApplyConfiguration(new LoanApplicationConfiguration());
         modelBuilder.ApplyConfiguration(new BaseEventConfiguration());
     }

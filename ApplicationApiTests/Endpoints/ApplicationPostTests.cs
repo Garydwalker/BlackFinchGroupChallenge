@@ -1,14 +1,14 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using ApplicationApi;
-using ApplicationApi.Commands;
+using ApplicationApi.Commands.NewLoanApplication;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 
-namespace ApplicationApiTests;
+namespace ApplicationApiTests.Endpoints;
 
 public class ApplicationPostTests
 {

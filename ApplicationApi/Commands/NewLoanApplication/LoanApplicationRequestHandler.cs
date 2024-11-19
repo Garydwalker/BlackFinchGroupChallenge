@@ -3,16 +3,16 @@ using ApplicationDomain.Stores;
 using CommunityToolkit.Diagnostics;
 using MediatR;
 
-namespace ApplicationApi.Commands;
+namespace ApplicationApi.Commands.NewLoanApplication;
 
-public class LoanApplicationRequestHandler(LoanApplicationStore loanApplicationStore) : IRequestHandler<LoanApplicationRequest, Unit>
+public class LoanApplicationRequestHandler(ILoanApplicationStore loanApplicationStore) : IRequestHandler<LoanApplicationRequest, Unit>
 {
     public async Task<Unit> Handle(LoanApplicationRequest request, CancellationToken cancellationToken)
     {
-        Guard.IsInRange(request.CreditScore,1,999);
+        Guard.IsInRange(request.CreditScore, 1, 1000);
 
         var loanApplication = LoanApplication.Create(request.LoanAmount, request.AssetValue, request.CreditScore);
         await loanApplicationStore.Create(loanApplication);
         return Unit.Value;
-}
+    }
 }

@@ -1,6 +1,4 @@
-﻿using ApplicationDomain.Domain;
-
-namespace ApplicationDomain.LoanApprovalEngine.Rules;
+﻿namespace LoanDecisionApi.LoanApprovalEngine.Rules;
 
 public class SubMillionPoundLoanAcceptanceRule : ILoanAcceptanceRule
 {

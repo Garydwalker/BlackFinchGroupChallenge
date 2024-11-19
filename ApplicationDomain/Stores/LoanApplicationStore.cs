@@ -3,7 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApplicationDomain.Stores;
 
-public class LoanApplicationStore(ApplicationDbContext dbContext)
+public interface ILoanApplicationStore
+{
+    Task<LoanApplication?> Get(Guid applicationId);
+    Task Create(LoanApplication application);
+}
+public class LoanApplicationStore(ApplicationDbContext dbContext) : ILoanApplicationStore
 {
     public virtual async Task<LoanApplication?> Get(Guid applicationId)
     {

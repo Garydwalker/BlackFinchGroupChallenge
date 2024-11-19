@@ -1,7 +1,6 @@
-using ApplicationDomain.Domain;
 using FluentAssertions;
 
-namespace ApplicationDomainTests.LoanApprovalEngine.Rules;
+namespace LoanDecisionApiTests.LoanApprovalEngine.Rules;
 
 [TestFixture]
 public class LoanApplicationTests
@@ -18,7 +17,7 @@ public class LoanApplicationTests
     public void LoanToValuePercentage_ShouldReturnExpectedResult_WhenValuesAreProvided(decimal amount, decimal assetValue, decimal expectedLtv)
     {
         // Arrange
-        var application = LoanApplication.Create(amount, assetValue, 800);
+        var application = new LoanApplication(Guid.NewGuid(), amount, assetValue, 800);
 
         // Act
         var ltv = application.LoanToValuePercentage;

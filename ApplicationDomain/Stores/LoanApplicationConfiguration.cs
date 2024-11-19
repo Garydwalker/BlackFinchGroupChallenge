@@ -15,7 +15,7 @@ public class LoanApplicationConfiguration : IEntityTypeConfiguration<LoanApplica
         builder.HasKey(la => la.Id);
         builder.HasPartitionKey(x => x.Id);
 
-        builder.HasDiscriminator<string>("$type").HasValue<LoanApplication>("LoanApplication");
+        builder.HasDiscriminator<string>("Discriminator").HasValue<LoanApplication>("LoanApplication");
     }
 
 }
@@ -27,7 +27,7 @@ public class BaseEventConfiguration : IEntityTypeConfiguration<BaseEvent>
         builder.ToContainer("LoanApplications");
         builder.HasKey(la => la.Id);
         builder.HasPartitionKey(x => x.Id);
-        builder.HasDiscriminator<string>("$type")
+        builder.HasDiscriminator<string>("Discriminator")
             .HasValue<BaseEvent>(nameof(BaseEvent))
             .HasValue<LoanApprovalRequestEvent>(nameof(LoanApprovalRequestEvent))
             .HasValue<LoanApplicationCompleteEvent>(nameof(LoanApplicationCompleteEvent))
@@ -35,20 +35,3 @@ public class BaseEventConfiguration : IEntityTypeConfiguration<BaseEvent>
 
     }
 }
-//
-// public class LoanApprovalRequestEventConfiguration : IEntityTypeConfiguration<LoanApprovalRequestEvent>
-// {
-//     public void Configure(EntityTypeBuilder<LoanApprovalRequestEvent> builder)
-//     {
-//         builder.HasPartitionKey(x=>x.ApplicationId);
-//     }
-// }
-//
-// public class LoanApplicationCompleteEventConfiguration : IEntityTypeConfiguration<LoanApplicationCompleteEvent>
-// {
-//     public void Configure(EntityTypeBuilder<LoanApplicationCompleteEvent> builder)
-//     {
-//         builder.HasPartitionKey(x => x.ApplicationId);
-//         
-//     }
-// }

@@ -1,5 +1,7 @@
 using ApplicationApi;
-using ApplicationApi.Commands;
+using ApplicationApi.Commands.ApproveLoan;
+using ApplicationApi.Commands.NewLoanApplication;
+using ApplicationApi.Commands.RejectLoanApplication;
 using ApplicationApi.RequestPipeline;
 using ApplicationDomain.Stores;
 using MediatR;
@@ -34,7 +36,6 @@ app.UseCloudEvents();
 app.MapSubscribeHandler();
 
 
-
 app.MapPost("/application", async (LoanApplicationRequest  loanApplication, IMediator mediator) =>
 {
     if(loanApplication is null)return Results.BadRequest();
@@ -44,6 +45,27 @@ app.MapPost("/application", async (LoanApplicationRequest  loanApplication, IMed
 })
 .WithTopic("pubsub", "createApplications")
 .WithName("NewApplication");
+
+
+app.MapPost("/application/events/approve", async (ApproveLoanApplicationRequest request, IMediator mediator) =>
+{
+
+    await mediator.Send(request);
+
+    return Results.Ok();
+}).WithTopic("pubsub", "loan-approved")
+    .WithName("ApplicationApproved");
+
+app.MapPost("/application/events/reject", async (RejectLoanApplicationRequest request, IMediator mediator) =>
+    {
+        await mediator.Send(request);
+
+        return Results.Ok();
+    })
+    .WithTopic("pubsub", "loan-rejected")
+    .WithName("ApplicationRejected");
+
+
 
 app.Run();
 

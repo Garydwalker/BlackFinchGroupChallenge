@@ -1,8 +1,7 @@
-using ApplicationDomain.Domain;
-using ApplicationDomain.LoanApprovalEngine.Rules;
 using FluentAssertions;
+using LoanDecisionApi.LoanApprovalEngine.Rules;
 
-namespace ApplicationDomainTests.LoanApprovalEngine.Rules;
+namespace LoanDecisionApiTests.LoanApprovalEngine.Rules;
 
 [TestFixture]
 public class MillionPoundLoanAcceptanceRuleTests
@@ -20,7 +19,7 @@ public class MillionPoundLoanAcceptanceRuleTests
     public void Evaluate_ShouldAlwaysReturnTrue_WhenLoanValueIsUnderOneMillion(decimal amount)
     {
         // Arrange
-        var application = LoanApplication.Create(amount, 1000000, 800);
+        var application = new LoanApplication(Guid.NewGuid(), amount, 1000000, 800);
 
         // Act
         var result = _rule.Evaluate(application);
@@ -40,7 +39,7 @@ public class MillionPoundLoanAcceptanceRuleTests
     public void Evaluate_ShouldReturnExpectedResult_WhenLoanValueIsOneMillionOrMore(decimal amount, decimal assetValue, int creditScore, bool expected)
     {
         // Arrange
-        var application = LoanApplication.Create(amount, assetValue, creditScore);
+        var application = new LoanApplication(Guid.NewGuid(), amount, assetValue, creditScore);
 
         // Act
         var result = _rule.Evaluate(application);

@@ -10,8 +10,8 @@ public class LoanApplicationCompleteEvent : BaseEvent
     public decimal Amount { get; init; }
     public decimal AssetValue { get; init; }
     public int CreditScore { get; init; }
-    public bool? ApprovalStatus { get; private set; }
-
+    public bool? ApprovalStatus { get; init; }
+    public decimal LoanToValuePercentage => Math.Round((Amount / AssetValue) * 100, 2);
 
     public static LoanApplicationCompleteEvent CreateLoanApplication(LoanApplication application) =>
         new()

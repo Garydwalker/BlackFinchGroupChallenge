@@ -16,7 +16,19 @@ builder.AddProject<Projects.ApplicationApi>("applicationapi")
     .WithReference(cosmos);
 
 builder.AddAzureFunctionsProject<Projects.ChangeFeedFunctions>("changefeedfunctions")
+    .WithDaprSidecar()
+    .WithReference(daprPubSub)
     .WithReference(cosmos);
+
+
+builder.AddProject<Projects.LoanDecisionApi>("loandecisionapi")
+    .WithDaprSidecar()
+    .WithReference(daprPubSub);
+
+
+builder.AddProject<Projects.ReportingApi>("reportingapi")
+    .WithDaprSidecar()
+    .WithReference(daprPubSub);
 
 
 builder.Build().Run();

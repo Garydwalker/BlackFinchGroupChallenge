@@ -1,8 +1,6 @@
-using ApplicationApi.Commands;
+using ApplicationApi.Commands.NewLoanApplication;
 using ApplicationDomain.Domain;
 using ApplicationDomain.Stores;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 
 namespace ApplicationApiTests.Commands;
@@ -10,14 +8,13 @@ namespace ApplicationApiTests.Commands;
 [TestFixture]
 public class LoanApplicationRequestHandlerTests
 {
-    private LoanApplicationStore _mockLoanApplicationStore;
+    private ILoanApplicationStore _mockLoanApplicationStore;
     private LoanApplicationRequestHandler _handler;
 
     [SetUp]
     public void Setup()
     {
-        var dbContext = Substitute.For<ApplicationDbContext>();
-        _mockLoanApplicationStore = Substitute.For<LoanApplicationStore>(dbContext);
+        _mockLoanApplicationStore = Substitute.For<ILoanApplicationStore>();
         _handler = new LoanApplicationRequestHandler(_mockLoanApplicationStore);
     }
 

@@ -22,6 +22,8 @@
     <ProjectReference Include="..\ApplicationApi\ApplicationApi.csproj" />
     <ProjectReference Include="..\BlazorApp1\BlazorApp1.csproj" />
     <ProjectReference Include="..\ChangeFeedFunctions\ChangeFeedFunctions.csproj" />
+    <ProjectReference Include="..\LoanDecisionApi\LoanDecisionApi.csproj" />
+    <ProjectReference Include="..\ReportingApi\ReportingApi.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,5 @@
 ﻿
-using ApplicationDomain.Domain;
-
-namespace ApplicationDomain.LoanApprovalEngine.Rules;
+namespace LoanDecisionApi.LoanApprovalEngine.Rules;
 
 public interface ILoanAcceptanceRule
 {

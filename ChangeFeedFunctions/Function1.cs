@@ -1,52 +1,13 @@
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Dapr.Client;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-
-
-public class DiscriminatorFirstConverter<T> : JsonConverter<T>
-{
-    
-    public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        // Use default deserialization
-        return JsonSerializer.Deserialize<T>(ref reader, options);
-    }
-
-    public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
-    {
-        var jsonObject = JsonSerializer.SerializeToElement(value, options).EnumerateObject();
-        writer.WriteStartObject();
-
-        // Write the discriminator property first
-        foreach (var property in jsonObject)
-        {
-            if (property.Name.Equals("$type", StringComparison.OrdinalIgnoreCase))
-            {
-                property.WriteTo(writer);
-                break;
-            }
-        }
-
-        // Write the rest of the properties
-        foreach (var property in jsonObject)
-        {
-            if (!property.Name.Equals("$type", StringComparison.OrdinalIgnoreCase))
-            {
-                property.WriteTo(writer);
-            }
-        }
-
-        writer.WriteEndObject();
-    }
-}
-[JsonConverter(typeof(DiscriminatorFirstConverter<BaseEvent>))]
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "$type",IgnoreUnrecognizedTypeDiscriminators = true,UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FailSerialization)]
-[JsonDerivedType(typeof(LoanApplicationCompleteEvent), typeDiscriminator: "LoanApplicationCompleteEvent")]
-[JsonDerivedType(typeof(LoanApprovalRequestEvent), typeDiscriminator: "LoanApprovalRequestEvent")]
 public class BaseEvent
 {
+    [JsonPropertyName("id")]
     public Guid Id { get; init; }
     public DateTime RequestTime { get; init; }
 }
@@ -57,7 +18,7 @@ public class LoanApplicationCompleteEvent : BaseEvent
     public decimal Amount { get; init; }
     public decimal AssetValue { get; init; }
     public int CreditScore { get; init; }
-    public bool? ApprovalStatus { get; private set; }
+    public bool? ApprovalStatus { get; init; }
 
 }
 public class LoanApprovalRequestEvent : BaseEvent
@@ -71,17 +32,49 @@ public class LoanApprovalRequestEvent : BaseEvent
 
 namespace ChangeFeedFunctions
 {
+    public static class StringExtensions
+    {
+        public static string ToKebabCase(this string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append(char.ToLower(input[0]));
+            for (var i = 1; i < input.Length; i++)
+            {
+                if (char.IsUpper(input[i]))
+                {
+                    stringBuilder.Append('-');
+
+                }
+                stringBuilder.Append(char.ToLower(input[i]));
+            }
+
+            return stringBuilder.ToString();
+        }
+    }
     public class Function1
     {
         private readonly ILogger<Function1> _logger;
+        private readonly DaprClient _daprClient;
+        private readonly Dictionary<string, Type> _knownEvents;
 
-        public Function1(ILogger<Function1> logger)
+        public Function1(ILogger<Function1> logger, DaprClient daprClient)
         {
             _logger = logger;
-           
+            _daprClient = daprClient;
+            _knownEvents = new Dictionary<string, Type>
+            {
+                {nameof(LoanApplicationCompleteEvent), typeof(LoanApplicationCompleteEvent)},
+                {nameof(LoanApprovalRequestEvent), typeof(LoanApprovalRequestEvent)}
+            };
         }
 
         [Function(nameof(Function1))]
+
         public async Task Run(
             [CosmosDBTrigger(
                 databaseName: "applications",
@@ -90,23 +83,22 @@ namespace ChangeFeedFunctions
                 LeaseContainerName = "leases",
                 CreateLeaseContainerIfNotExists = true,
                 StartFromBeginning = true)]
-            IReadOnlyList<object> input)
+            IReadOnlyList<dynamic> input)
         {
-            
+
             foreach (var baseEvent in input)
             {
-                try
+                if (baseEvent.TryGetProperty("Discriminator", out JsonElement typeElement))
                 {
-                    var serialize = JsonSerializer.Serialize(baseEvent);
-                    var newEvent = JsonSerializer.Deserialize<BaseEvent>(serialize);
-                    _logger.LogInformation("Processed event: {event}", newEvent);
+                    var eventType = typeElement.GetString();
+                    if (!_knownEvents.ContainsKey(eventType)) continue;
+
+                    string jsonString = baseEvent.GetRawText();
+                    var eventTypeObject = JsonSerializer.Deserialize(jsonString, _knownEvents[eventType]);
+                    _logger.LogInformation("Processed event: {event}", eventTypeObject);
+
+                    await _daprClient.PublishEventAsync("pubsub", eventType.Replace("Event", "").ToKebabCase(), eventTypeObject);
                 }
-                catch(Exception ex)
-                {
-                 continue;
-                }
-                
-                Console.WriteLine("hello");
             }
         }
     }
