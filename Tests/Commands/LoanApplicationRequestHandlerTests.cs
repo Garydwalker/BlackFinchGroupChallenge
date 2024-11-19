@@ -20,11 +20,13 @@ public class LoanApplicationRequestHandlerTests
         _handler = new LoanApplicationRequestHandler(_loanApplicationStore);
     }
 
-    [Test]
-    public async Task Handle_ShouldCreateLoanApplication_WhenRequestIsValid()
+    [TestCase(1)]
+    [TestCase(50)]
+    [TestCase(999)]
+    public async Task Handle_ShouldCreateLoanApplication_WhenRequestIsValid(int validCreditScore)
     {
         // Arrange
-        var request = new LoanApplicationRequest("500000", "1000000", "750");
+        var request = new LoanApplicationRequest("500000", "1000000", validCreditScore.ToString());
        
         // Act
         await _handler.Handle(request, CancellationToken.None);
@@ -33,7 +35,7 @@ public class LoanApplicationRequestHandlerTests
         await _loanApplicationStore.Received(1).Create(Arg.Is<LoanApplication>(app =>
             app.Amount == 500000 &&
             app.AssetValue == 1000000 &&
-            app.CreditScore == 750));
+            app.CreditScore == validCreditScore));
     }
 
     [Test]
@@ -74,11 +76,12 @@ public class LoanApplicationRequestHandlerTests
         exception.Message.Should().Contain("CreditScore");
     }
 
-    [Test]
-    public void Handle_ShouldThrowArgumentOutOfRangeException_WhenCreditScoreIsOutOfRange()
+    [TestCase(0)]
+    [TestCase(1000)]
+    public void Handle_ShouldThrowArgumentOutOfRangeException_WhenCreditScoreIsOutOfRange(int creditScore)
     {
         // Arrange
-        var request = new LoanApplicationRequest("500000", "1000000", "1000");
+        var request = new LoanApplicationRequest("500000", "1000000", creditScore.ToString());
 
         // Act + Assert
         var exception =

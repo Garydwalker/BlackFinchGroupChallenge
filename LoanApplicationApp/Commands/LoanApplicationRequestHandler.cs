@@ -12,7 +12,7 @@ public class LoanApplicationRequestHandler(LoanApplicationStore loanApplicationS
         Guard.IsNotNull(request.LoanAmount);
         Guard.IsNotNull(request.AssetValue);
         Guard.IsNotNull(request.CreditScore);
-        Guard.IsInRange(request.CreditScore.Value,1,999);
+        Guard.IsInRange(request.CreditScore.Value,1,1000);
 
         await  loanApplicationStore.Create(LoanApplication.Create(request.LoanAmount.Value,
             request.AssetValue.Value, request.CreditScore.Value));
