@@ -3,6 +3,7 @@
 @using Dapr.Client
 
 @inject DaprClient DaprClient
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 <PageTitle>New Application</PageTitle>
@@ -39,21 +40,28 @@
 
     private async Task HandleValidSubmit()
     {
+        Application.Id = Guid.NewGuid();
         // Handle the form submission
         try
         {
             await DaprClient.PublishEventAsync("pubsub", "createApplications", Application, default(CancellationToken));
-            
+
             Console.WriteLine("Application Submitted");
+
+            NavigationManager.NavigateTo($"/loan-application-status/{Application.Id}");
         }
         catch
-        { 
+        {
+
             Console.WriteLine("Unable to submit form");
         }
     }
 
     public class ApplicationModel
     {
+        [Required]
+        public Guid Id { get; set; }
+
         [Required]
         [Range(1, double.MaxValue, ErrorMessage = "Loan Amount must be greater than 0.")]
         public decimal LoanAmount { get; set; }

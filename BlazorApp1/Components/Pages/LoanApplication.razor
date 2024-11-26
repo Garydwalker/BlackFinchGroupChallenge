@@ -1,0 +1,72 @@
+﻿@page "/loan-application-status/{ApplicationId:guid}"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager Navigation
+@implements IAsyncDisposable
+
+<PageTitle>Loan Application Status</PageTitle>
+<div class="text-center">
+    @if (_applicationStatus is null)
+    {
+        <div>
+            <div class="spinner-grow" style="width: 5rem; height: 5rem;" role="status">
+            </div>
+            <div class="row">
+                <strong>Reviewing your Application</strong>
+            </div>
+        </div>
+    }
+    @if (_applicationStatus is true)
+    {
+        <div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="5rem" height="5rem" fill="green" viewBox="0 0 16 16">
+                <circle cx="8" cy="8" r="8" />
+            </svg>
+            <div class="row">
+                <strong>Congratulations! Your Application has been approved</strong>
+            </div>
+        </div>
+    }
+    @else
+    {
+    <div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="5rem" height="5rem" fill="red" viewBox="0 0 16 16">
+            <circle cx="8" cy="8" r="8" />
+        </svg>
+        <div class="row">
+            <strong>Unfortunately, your Application has been rejected</strong>
+        </div>
+    </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public Guid ApplicationId { get; set; }
+
+    private HubConnection? _hubConnection;
+    private bool? _applicationStatus;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri($"/loan-application-hub?applicationId={ApplicationId}"))
+            .Build();
+
+        _hubConnection.On<bool>("LoanApplicationUpdated", async (loanStatus) =>
+        {
+            _applicationStatus = loanStatus;
+            await _hubConnection.DisposeAsync();
+            await InvokeAsync(StateHasChanged);
+        });
+
+        await _hubConnection.StartAsync();
+    }
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
+}

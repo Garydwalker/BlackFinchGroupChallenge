@@ -11,7 +11,7 @@ public class LoanApplicationRequestHandler(ILoanApplicationStore loanApplication
     {
         Guard.IsInRange(request.CreditScore, 1, 1000);
 
-        var loanApplication = LoanApplication.Create(request.LoanAmount, request.AssetValue, request.CreditScore);
+        var loanApplication = LoanApplication.Create(request.LoanAmount, request.AssetValue, request.CreditScore,request.Id);
         await loanApplicationStore.Create(loanApplication);
         return Unit.Value;
     }
