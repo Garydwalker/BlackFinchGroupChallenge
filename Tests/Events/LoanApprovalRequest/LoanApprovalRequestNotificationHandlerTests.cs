@@ -9,14 +9,12 @@ using NSubstitute;
 
 namespace LoanApplicationApp.Tests.Events.LoanApprovalRequest;
 
-
-
 [TestFixture]
 public class LoanApprovalRequestNotificationHandlerTests
 {
-    private LoanApplicationApprovalEngine _loanApplicationApprovalEngine;
-    private IMediator _mediator;
-    private LoanApprovalRequestNotificationHandler _handler;
+    private LoanApplicationApprovalEngine _loanApplicationApprovalEngine = null!;
+    private IMediator _mediator = null!;
+    private LoanApprovalRequestNotificationHandler _handler = null!;
 
     [SetUp]
     public void Setup()

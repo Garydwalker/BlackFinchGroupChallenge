@@ -34,8 +34,6 @@ public class LoanRequestService(IMediator mediator, LoanStatsStore loanStats)
             }
             Console.WriteLine(Environment.NewLine);
         }
-        
-        
     }
 
     private static string? DisplayMenu()

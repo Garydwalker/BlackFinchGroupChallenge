@@ -9,9 +9,9 @@ namespace LoanApplicationApp.Tests.LoanApprovalEngine;
 [TestFixture]
 public class LoanApplicationApprovalEngineTests
 {
-    private ILoanAcceptanceRule _mockRule1;
-    private ILoanAcceptanceRule _mockRule2;
-    private LoanApplicationApprovalEngine _engine;
+    private ILoanAcceptanceRule _mockRule1 = null!;
+    private ILoanAcceptanceRule _mockRule2 = null!;
+    private LoanApplicationApprovalEngine _engine = null!;
 
     [SetUp]
     public void Setup()

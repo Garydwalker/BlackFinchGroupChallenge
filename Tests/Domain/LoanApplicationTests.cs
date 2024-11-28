@@ -12,9 +12,9 @@ public class LoanApplicationTests
     public void Create_ShouldInitializeLoanApplication_WithCorrectValues()
     {
         // Arrange
-        decimal amount = 500000;
-        decimal assetValue = 1000000;
-        int creditScore = 750;
+        const decimal amount = 500000;
+        const decimal assetValue = 1000000;
+        const int creditScore = 750;
 
         // Act
         var application = LoanApplication.Create(amount, assetValue, creditScore);
@@ -26,7 +26,7 @@ public class LoanApplicationTests
         application.ApprovalStatus.Should().BeNull();
         application.LoanToValuePercentage.Should().Be(amount / assetValue * 100);
         application.Events.Should().HaveCount(1);
-        application.Events.First().Should().BeOfType<LoanApprovalRequestEvent>();
+        application.Events[0].Should().BeOfType<LoanApprovalRequestEvent>();
     }
 
     [Test]
@@ -41,7 +41,7 @@ public class LoanApplicationTests
         // Assert
         application.ApprovalStatus.Should().BeTrue();
         application.Events.Should().HaveCount(2);
-        application.Events.Last().Should().BeOfType<LoanApplicationCompleteEvent>();
+        application.Events[1].Should().BeOfType<LoanApplicationCompleteEvent>();
     }
 
     [Test]
@@ -56,6 +56,6 @@ public class LoanApplicationTests
         // Assert
         application.ApprovalStatus.Should().BeFalse();
         application.Events.Should().HaveCount(2);
-        application.Events.Last().Should().BeOfType<LoanApplicationCompleteEvent>();
+        application.Events[1].Should().BeOfType<LoanApplicationCompleteEvent>();
     }
 }

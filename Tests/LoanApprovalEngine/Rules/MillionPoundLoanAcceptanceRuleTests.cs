@@ -7,7 +7,7 @@ namespace LoanApplicationApp.Tests.LoanApprovalEngine.Rules;
 [TestFixture]
 public class MillionPoundLoanAcceptanceRuleTests
 {
-    private MillionPoundLoanAcceptanceRule _rule;
+    private MillionPoundLoanAcceptanceRule _rule = null!;
 
     [SetUp]
     public void Setup()
@@ -35,8 +35,6 @@ public class MillionPoundLoanAcceptanceRuleTests
     [TestCase(1500000, 2500001, 950, true)] // LTV = 60.00%, Credit Score < 950
     [TestCase(1500000, 2500000, 949, false)] // LTV = 60.00%
     [TestCase(1000000, 1666900, 950, true)] // LTV < 60.00%
-
-
     public void Evaluate_ShouldReturnExpectedResult_WhenLoanValueIsOneMillionOrMore(decimal amount, decimal assetValue, int creditScore, bool expected)
     {
         // Arrange

@@ -7,7 +7,7 @@ namespace LoanApplicationApp.Tests.LoanApprovalEngine.Rules;
 [TestFixture]
 public class SubMillionPoundLoanAcceptanceRuleTests
 {
-    private SubMillionPoundLoanAcceptanceRule _rule;
+    private SubMillionPoundLoanAcceptanceRule _rule = null!;
 
     [SetUp]
     public void Setup()
@@ -29,8 +29,7 @@ public class SubMillionPoundLoanAcceptanceRuleTests
         // Assert
         result.Should().BeTrue();
     }
-
-
+    
     [TestCase(500000, 1000000, 750, true)] // LTV = 50.00%, Credit Score = 750
     [TestCase(500000, 1000000, 751, true)] // LTV = 50.00%, Credit Score > 750
     [TestCase(500000, 1000000, 749, false)] // LTV = 50.00%, Credit Score < 750
@@ -47,6 +46,7 @@ public class SubMillionPoundLoanAcceptanceRuleTests
         // Assert
         result.Should().Be(expected);
     }
+
     [TestCase(600000, 1000000, 800, true)] // LTV = 60.00%, Credit Score = 800
     [TestCase(600000, 1000000, 799, false)] // LTV = 60.00%, Credit Score<= 800
     [TestCase(700000, 1000000, 800, true)] // LTV = 70.00%, Credit Score = 800
