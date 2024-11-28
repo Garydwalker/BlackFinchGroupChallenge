@@ -79,7 +79,7 @@ namespace ChangeFeedFunctions
             [CosmosDBTrigger(
                 databaseName: "applications",
                 containerName: "LoanApplications",
-                Connection = "Cosmos",
+                Connection = "ConnectionStrings:Cosmos",
                 LeaseContainerName = "leases",
                 CreateLeaseContainerIfNotExists = true,
                 StartFromBeginning = true)]
@@ -88,17 +88,16 @@ namespace ChangeFeedFunctions
 
             foreach (var baseEvent in input)
             {
-                if (baseEvent.TryGetProperty("Discriminator", out JsonElement typeElement))
-                {
-                    var eventType = typeElement.GetString();
-                    if (!_knownEvents.ContainsKey(eventType)) continue;
+                if (!baseEvent.TryGetProperty("Discriminator", out JsonElement typeElement)) continue;
 
-                    string jsonString = baseEvent.GetRawText();
-                    var eventTypeObject = JsonSerializer.Deserialize(jsonString, _knownEvents[eventType]);
-                    _logger.LogInformation("Processed event: {event}", eventTypeObject);
+                var eventType = typeElement.GetString();
+                if (eventType is null || !_knownEvents.ContainsKey(eventType)) continue;
 
-                    await _daprClient.PublishEventAsync("pubsub", eventType.Replace("Event", "").ToKebabCase(), eventTypeObject);
-                }
+                string jsonString = baseEvent.GetRawText();
+                var eventTypeObject = JsonSerializer.Deserialize(jsonString, _knownEvents[eventType]);
+                _logger.LogInformation("Processed event: {event}", eventTypeObject);
+
+                await _daprClient.PublishEventAsync("pubsub", eventType.Replace("Event", "").ToKebabCase(), eventTypeObject);
             }
         }
     }

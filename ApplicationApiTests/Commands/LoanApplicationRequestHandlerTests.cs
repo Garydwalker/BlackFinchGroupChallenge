@@ -8,8 +8,8 @@ namespace ApplicationApiTests.Commands;
 [TestFixture]
 public class LoanApplicationRequestHandlerTests
 {
-    private ILoanApplicationStore _mockLoanApplicationStore;
-    private LoanApplicationRequestHandler _handler;
+    private ILoanApplicationStore _mockLoanApplicationStore = null!;
+    private LoanApplicationRequestHandler _handler = null!;
 
     [SetUp]
     public void Setup()
@@ -24,7 +24,7 @@ public class LoanApplicationRequestHandlerTests
     public async Task Handle_ValidRequest_CreatesLoanApplication(int creditScore)
     {
         // Arrange
-        var request = new LoanApplicationRequest(LoanAmount: 1000, AssetValue: 5000, CreditScore: creditScore);
+        var request = new LoanApplicationRequest(Guid.NewGuid(),LoanAmount: 1000, AssetValue: 5000, CreditScore: creditScore);
         var cancellationToken = new CancellationToken();
 
         // Act
@@ -38,7 +38,7 @@ public class LoanApplicationRequestHandlerTests
     public void Handle_InvalidCreditScore_ThrowsException()
     {
         // Arrange
-        var request = new LoanApplicationRequest(LoanAmount: 1000, AssetValue: 5000, CreditScore: 1000);
+        var request = new LoanApplicationRequest(Guid.NewGuid(), LoanAmount: 1000, AssetValue: 5000, CreditScore: 1000);
         var cancellationToken = new CancellationToken();
 
         // Act & Assert

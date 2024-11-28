@@ -32,14 +32,19 @@ namespace BlazorApp1.Hubs
     {
         public override async Task OnConnectedAsync()
         {
-            var applicationId = Context.GetHttpContext().Request.Query["applicationId"].ToString();
-            activeClients.ActiveLoanApplicationClients.Add(Guid.Parse(applicationId), Context.ConnectionId);
+            var applicationIdAsString = Context.GetHttpContext()?.Request.Query["applicationId"].ToString();
+
+            if (Guid.TryParse(applicationIdAsString, out var applicationId) is false) return;
+
+            activeClients.ActiveLoanApplicationClients.Add(applicationId, Context.ConnectionId);
             await base.OnConnectedAsync();
         }
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var applicationId = Context.GetHttpContext().Request.Query["applicationId"].ToString();
-            activeClients.ActiveLoanApplicationClients.Remove(Guid.Parse(applicationId));
+            var applicationIdAsString = Context.GetHttpContext()?.Request.Query["applicationId"].ToString();
+            if (Guid.TryParse(applicationIdAsString, out var applicationId) is false) return;
+
+            activeClients.ActiveLoanApplicationClients.Remove(applicationId);
             await base.OnDisconnectedAsync(exception);
         }
     }

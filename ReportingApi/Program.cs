@@ -26,7 +26,7 @@ app.MapGet("/stats", (LoanStatsStore loanStatsStore) => loanStatsStore.GetStats(
 .WithName("GetStats");
 
 
-app.MapPost("stats/events/new-application", async (LoanApplication loanApplication, LoanStatsStore loanStatsStore, DaprClient daprClient, CancellationToken cancellationToken = default(CancellationToken)) =>
+app.MapPost("stats/events/new-application", (LoanApplication loanApplication, LoanStatsStore loanStatsStore, DaprClient daprClient, CancellationToken cancellationToken = default(CancellationToken)) =>
     {
        loanStatsStore.Update(loanApplication);
        return Results.Ok();

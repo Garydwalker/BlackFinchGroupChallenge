@@ -53,7 +53,7 @@ public class ApplicationPostTests
     public async Task PostApplication_CallsMediator_WithRequest_AndReturnsOk()
     {
         // Arrange
-        var loanApplication = new LoanApplicationRequest(1000, 2000, 750);
+        var loanApplication = new LoanApplicationRequest(Guid.NewGuid(), 1000, 2000, 750);
         _mediator.Send(Arg.Any<IRequest<Unit>>(), Arg.Any<CancellationToken>()).Returns(Unit.Value);
 
         // Act

@@ -16,7 +16,7 @@
             </div>
         </div>
     }
-    @if (_applicationStatus is true)
+    else if (_applicationStatus is true)
     {
         <div>
             <svg xmlns="http://www.w3.org/2000/svg" width="5rem" height="5rem" fill="green" viewBox="0 0 16 16">
@@ -27,7 +27,7 @@
             </div>
         </div>
     }
-    @else
+    else
     {
     <div>
         <svg xmlns="http://www.w3.org/2000/svg" width="5rem" height="5rem" fill="red" viewBox="0 0 16 16">
@@ -38,6 +38,7 @@
         </div>
     </div>
     }
+
 </div>
 
 @code {
@@ -49,18 +50,26 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _hubConnection = new HubConnectionBuilder()
-            .WithUrl(Navigation.ToAbsoluteUri($"/loan-application-hub?applicationId={ApplicationId}"))
-            .Build();
-
-        _hubConnection.On<bool>("LoanApplicationUpdated", async (loanStatus) =>
+        try
         {
-            _applicationStatus = loanStatus;
-            await _hubConnection.DisposeAsync();
-            await InvokeAsync(StateHasChanged);
-        });
 
-        await _hubConnection.StartAsync();
+            _hubConnection = new HubConnectionBuilder()
+                .WithUrl(Navigation.ToAbsoluteUri($"/loan-application-hub?applicationId={ApplicationId}"))
+                .Build();
+
+            _hubConnection.On<bool>("LoanApplicationUpdated", async (loanStatus) =>
+            {
+                _applicationStatus = loanStatus;
+                await _hubConnection.DisposeAsync();
+                await InvokeAsync(StateHasChanged);
+            });
+
+            await _hubConnection.StartAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
     public async ValueTask DisposeAsync()
     {

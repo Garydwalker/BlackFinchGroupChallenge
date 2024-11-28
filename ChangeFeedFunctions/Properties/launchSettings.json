@@ -2,8 +2,14 @@
   "profiles": {
     "ChangeFeedFunctions": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7102",
-      "launchBrowser": false
+      "commandLineArgs": "--port 7102"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "containerRunArguments": "--init",
+      "httpPort": 31469,
+      "useSSL": false
     }
   }
 }

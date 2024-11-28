@@ -41,6 +41,7 @@
     private async Task HandleValidSubmit()
     {
         Application.Id = Guid.NewGuid();
+        Console.WriteLine("Saving");
         // Handle the form submission
         try
         {
@@ -50,16 +51,17 @@
 
             NavigationManager.NavigateTo($"/loan-application-status/{Application.Id}");
         }
-        catch
+        catch(Exception ex )
         {
-
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.InnerException?.Message);
             Console.WriteLine("Unable to submit form");
         }
+        Console.WriteLine("complete");
     }
 
     public class ApplicationModel
     {
-        [Required]
         public Guid Id { get; set; }
 
         [Required]

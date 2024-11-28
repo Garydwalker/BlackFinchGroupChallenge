@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: black-finch-group-challenge
+services:  
+  blazor:
+    project: ./BlazorApp1
+    docker:
+      path: ./Dockerfile
+      context: ../
+    language: dotnet
+    host: containerapp
+  loanapi:
+    project: ./ApplicationApi
+    docker:
+      path: ./Dockerfile
+      context: ../
+    language: dotnet
+    host: containerapp
+  changefeed:
+    project: ./ChangeFeedFunctions
+    docker:
+      path: ./Dockerfile
+      context: ../
+    language: dotnet
+    host: containerapp
+  decisionapi:
+    project: ./LoanDecisionApi
+    docker:
+      path: ./Dockerfile
+      context: ../
+    language: dotnet
+    host: containerapp
+  reportingapi:
+    project: ./ReportingApi
+    docker:
+      path: ./Dockerfile
+      context: ../
+    language: dotnet
+    host: containerapp
+  

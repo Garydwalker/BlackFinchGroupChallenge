@@ -1,9 +1,11 @@
 using Aspire.Hosting;
+using Microsoft.Extensions.Hosting;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
 var cosmos = builder.AddConnectionString("cosmos");
-
+    // var cosmos =  builder.AddAzureCosmosDB("cosmos");
+    // var storage = builder.AddAzureStorage("storage").RunAsEmulator();
 var daprPubSub = builder.AddDaprPubSub("pubsub");
 
 builder.AddProject<Projects.BlazorApp1>("blazorapp1")
@@ -16,6 +18,7 @@ builder.AddProject<Projects.ApplicationApi>("applicationapi")
     .WithReference(cosmos);
 
 builder.AddAzureFunctionsProject<Projects.ChangeFeedFunctions>("changefeedfunctions")
+    // .WithHostStorage(storage)
     .WithDaprSidecar()
     .WithReference(daprPubSub)
     .WithReference(cosmos);

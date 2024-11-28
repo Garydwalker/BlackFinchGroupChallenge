@@ -25,23 +25,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             var events = domainEntity.Events.ToList();
             domainEntity.ClearEvents();
             await AddRangeAsync(events, cancellationToken);
-            
-        }
 
-        foreach (var entry in ChangeTracker.Entries())
-        {
-            var test = entry.Entity;
         }
+        
+        var result = await base.SaveChangesAsync(cancellationToken);
 
-        try
-        {
-            var result = await base.SaveChangesAsync(cancellationToken);
+        return result;
 
-            return result;
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
     }
 }
